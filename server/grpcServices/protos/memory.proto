@@ -1,0 +1,93 @@
+syntax = "proto3";
+package deepmory.memory;
+import "common.proto";
+
+service MemoryService {
+  rpc GetContextWindow (ContextWindowRequest) returns (ContextWindowResponse);
+  rpc RetrieveRelevantMemories (RelevantMemoriesRequest) returns (RelevantMemoriesResponse);
+  rpc ProcessConversationTurn (ConversationTurnRequest) returns (ProcessTurnResponse);
+  rpc AddTurn (AddTurnRequest) returns (deepmory.common.Empty);
+  rpc ClearConversation (ClearConversationRequest) returns (deepmory.common.Empty);
+  rpc ListMemories (ListMemoriesRequest) returns (ListMemoriesResponse);
+  rpc UpdateMemory (UpdateMemoryRequest) returns (deepmory.common.Empty);
+  rpc DeleteMemory (DeleteMemoryRequest) returns (DeleteMemoryResponse);
+}
+
+message ContextWindowRequest {
+  string conversationId = 1;
+  string userId = 2;
+  int32 maxTokens = 3;
+}
+
+message ContextWindowResponse {
+  repeated ConversationMessage messages = 1;
+  string summary = 2;
+  int32 totalTokens = 3;
+}
+
+message ConversationMessage {
+  string role = 1;
+  string content = 2;
+  string timestamp = 3;
+}
+
+message RelevantMemoriesRequest {
+  string userId = 1;
+  string query = 2;
+  int32 topK = 3;
+}
+
+message RelevantMemoriesResponse {
+  repeated string memories = 1;
+}
+
+message ConversationTurnRequest {
+  string conversationId = 1;
+  string userId = 2;
+  string userMessage = 3;
+  string assistantResponse = 4;
+}
+
+message ProcessTurnResponse {
+  repeated string extractedMemoryIds = 1;
+}
+
+message AddTurnRequest {
+  string conversationId = 1;
+  string role = 2;
+  string content = 3;
+}
+
+message ClearConversationRequest {
+  string conversationId = 1;
+}
+
+message ListMemoriesRequest {
+  string userId = 1;
+}
+
+message ListMemoriesResponse {
+  repeated MemoryItem memories = 1;
+}
+
+message MemoryItem {
+  string id = 1;
+  string content = 2;
+  string createdAt = 3;
+  map<string, string> metadata = 4;
+}
+
+message UpdateMemoryRequest {
+  string memoryId = 1;
+  string userId = 2;
+  string content = 3;
+}
+
+message DeleteMemoryRequest {
+  string memoryId = 1;
+  string userId = 2;
+}
+
+message DeleteMemoryResponse {
+  bool success = 1;
+}

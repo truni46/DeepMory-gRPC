@@ -1,0 +1,84 @@
+syntax = "proto3";
+package deepmory.agents;
+import "common.proto";
+
+service AgentsService {
+  rpc CreateTask (CreateTaskRequest) returns (CreateTaskResponse);
+  rpc RunFromCommand (RunCommandRequest) returns (CreateTaskResponse);
+  rpc StreamTask (StreamTaskRequest) returns (stream TaskEvent);
+  rpc GetTask (GetTaskRequest) returns (TaskResponse);
+  rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
+  rpc CancelTask (CancelTaskRequest) returns (CancelTaskResponse);
+}
+
+message CreateTaskRequest {
+  string userId = 1;
+  string goal = 2;
+  string conversationId = 3;
+  string projectId = 4;
+}
+
+message CreateTaskResponse {
+  string taskId = 1;
+  string status = 2;
+}
+
+message RunCommandRequest {
+  string userId = 1;
+  string conversationId = 2;
+  string command = 3;
+}
+
+message StreamTaskRequest {
+  string taskId = 1;
+  string userId = 2;
+}
+
+message TaskEvent {
+  string type = 1;
+  string agentType = 2;
+  string status = 3;
+  string output = 4;
+  string finalReport = 5;
+  string taskId = 6;
+}
+
+message GetTaskRequest {
+  string taskId = 1;
+  string userId = 2;
+}
+
+message TaskResponse {
+  string taskId = 1;
+  string status = 2;
+  string goal = 3;
+  string finalReport = 4;
+  string errorMessage = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+  repeated TaskRun runs = 8;
+}
+
+message TaskRun {
+  string agentType = 1;
+  string status = 2;
+  string output = 3;
+  string timestamp = 4;
+}
+
+message ListTasksRequest {
+  string userId = 1;
+}
+
+message ListTasksResponse {
+  repeated TaskResponse tasks = 1;
+}
+
+message CancelTaskRequest {
+  string taskId = 1;
+  string userId = 2;
+}
+
+message CancelTaskResponse {
+  bool success = 1;
+}

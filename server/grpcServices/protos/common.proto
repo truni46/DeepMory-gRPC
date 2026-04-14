@@ -1,0 +1,16 @@
+syntax = "proto3";
+package deepmory.common;
+
+message Empty {}
+
+message Pagination {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message DocumentMetadata {
+  string documentId = 1;
+  string fileName = 2;
+  string contentType = 3;
+  int64 fileSize = 4;
+}

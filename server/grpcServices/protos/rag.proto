@@ -1,0 +1,74 @@
+syntax = "proto3";
+package deepmory.rag;
+import "common.proto";
+
+service RagService {
+  rpc SearchContext (SearchContextRequest) returns (SearchContextResponse);
+  rpc SearchMemoryVectors (SearchMemoryRequest) returns (SearchMemoryResponse);
+  rpc IndexDocument (IndexDocumentRequest) returns (deepmory.common.Empty);
+  rpc DeleteDocumentChunks (DeleteChunksRequest) returns (deepmory.common.Empty);
+  rpc UpsertMemoryVector (UpsertMemoryRequest) returns (deepmory.common.Empty);
+  rpc DeleteMemoryVector (DeleteMemoryRequest) returns (deepmory.common.Empty);
+}
+
+message SearchContextRequest {
+  string projectId = 1;
+  string query = 2;
+  int32 topK = 3;
+  bool useReranking = 4;
+  string mode = 5;
+}
+
+message SearchContextResponse {
+  repeated RagResult results = 1;
+}
+
+message RagResult {
+  string content = 1;
+  float score = 2;
+  string documentId = 3;
+  string fileName = 4;
+  map<string, string> metadata = 5;
+}
+
+message SearchMemoryRequest {
+  string userId = 1;
+  string query = 2;
+  int32 topK = 3;
+}
+
+message SearchMemoryResponse {
+  repeated MemoryVector results = 1;
+}
+
+message MemoryVector {
+  string memoryId = 1;
+  string content = 2;
+  float score = 3;
+}
+
+message IndexDocumentRequest {
+  string projectId = 1;
+  string documentId = 2;
+  string fileName = 3;
+  string filePath = 4;
+  string userId = 5;
+  map<string, string> metadata = 6;
+}
+
+message DeleteChunksRequest {
+  string projectId = 1;
+  string documentId = 2;
+}
+
+message UpsertMemoryRequest {
+  string userId = 1;
+  string memoryId = 2;
+  string content = 3;
+  map<string, string> metadata = 4;
+}
+
+message DeleteMemoryRequest {
+  string userId = 1;
+  string memoryId = 2;
+}
